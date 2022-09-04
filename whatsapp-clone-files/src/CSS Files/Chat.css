@@ -1,0 +1,16 @@
+.chat{
+    display: flex;
+    /* justify-content: flex-start; */
+    align-items: center;
+    padding: .5rem;
+    border-bottom: 1px solid rgba(135, 135, 135, 0.39);
+}
+.chat:hover{
+    background-color: grey;
+}
+.chat > div{
+    margin: 0 .2rem;  
+}
+.nameDis__Container > p{
+    font-size: small;
+}

@@ -1,0 +1,44 @@
+.sidebar__container{
+    flex: 0.25;
+    display: flex;
+    flex-direction: column;
+    background-color: white;
+}
+.sidebar__header{
+    background-color: rgb(223, 220, 220);
+    padding: 10px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.sidebar__search{
+    background-color: rgb(223, 220, 220);
+    padding: 10px;
+}
+.sidebar__search > form > div{
+    background-color: white;
+    width: fit-content;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 15px;
+    padding: 5px;
+}
+.sidebar__search > form > div > div{
+    display: flex;
+}
+
+.sidebar__search input{
+    flex: 1;
+    padding: 5px;
+    border: none;
+    outline: none;
+    border-radius: 15px;
+}
+.MuiSvgIcon-root{
+    padding: 3px;
+}
+.MuiSvgIcon-root:hover{
+    background-color: rgb(187, 187, 187);
+    border-radius: 50%;
+}
