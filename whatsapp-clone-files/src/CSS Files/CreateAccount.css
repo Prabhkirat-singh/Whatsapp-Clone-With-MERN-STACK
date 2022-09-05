@@ -8,7 +8,7 @@
     align-items: center;
     font-family: 'Baloo Thambi 2', cursive;
 }
-.signInForm{
+.CreateAccountForm{
     display: flex;
     flex-direction: column;
     height: 50%;
@@ -34,7 +34,7 @@
     background: white;
     border-radius: 18px;
 }
-.signInButton{
+.CreateAccountButton{
     background: #004989;
     width: fit-content;
     height: fit-content;
@@ -45,18 +45,10 @@
     font-weight: 600;
     cursor: pointer;
 }
-.signInForm > a{
+.CreateAccountForm > a{
     margin: auto;
     margin-top: 1rem;
 }
-.r_createAccount_Button{
-    color: grey;
-    background: none;
-    font-size: 1rem;
-    margin-top: 10px;
-    cursor: pointer;
-}
-
 @media only screen and (max-width: 500px) {
     .inputBoxes{
         width: 15rem;

@@ -1,9 +1,9 @@
 import React, { useState } from "react";
-import "../CSS Files/signIn.css";
+import "../CSS Files/CreateAccount.css";
 import { Link, useNavigate } from "react-router-dom";
 
-function SignIn() {
-  const [userInput, setUserInput] = useState({ userName: "", password: "" });
+function CreateAccount() {
+  const [userInput, setUserInput] = useState({ userName: "", fname: "", lname: "", password: "" });
   const history = useNavigate();
 
   let name;
@@ -15,27 +15,28 @@ function SignIn() {
   };
 
   const postData = async () => {
-    const { userName, password } = userInput;
-    const response = await fetch("/", {
+    const { userName, fname, lname, password } = userInput;
+    const response = await fetch("/create-account", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ userName, password }),
+      body: JSON.stringify({ userName, fname, lname, password }),
     });
 
     const data = await response.json();
     if (response.status === 200) {
       console.log(data);
+      return true
     } else if (response.status === 422 || !data) {
       console.log(data);
-      history("/");
+      history("/create-account");
     }
   };
 
   return (
     <>
       <div className="container">
-        <form className="signInForm">
-          <label className="labels" htmlFor="signInInfo">
+        <form className="CreateAccountForm">
+          <label className="labels" htmlFor="CreateAccountInfo">
             User Name
           </label>
           <div className="inputContainer">
@@ -47,6 +48,36 @@ function SignIn() {
               value={userInput.userName}
               onChange={handleInput}
               placeholder="Enter Your User Name"
+            />
+          </div>
+
+          <label className="labels" htmlFor="CreateAccountInfo">
+            First Name
+          </label>
+          <div className="inputContainer">
+            <input
+              className="inputBoxes"
+              type="text"
+              id="fname"
+              name="fname"
+              value={userInput.fname}
+              onChange={handleInput}
+              placeholder="Enter Your First Name"
+            />
+          </div>
+
+          <label className="labels" htmlFor="CreateAccountInfo">
+            Last Name
+          </label>
+          <div className="inputContainer">
+            <input
+              className="inputBoxes"
+              type="text"
+              id="lname"
+              name="lname"
+              value={userInput.lname}
+              onChange={handleInput}
+              placeholder="Enter Your Last Name"
             />
           </div>
 
@@ -65,19 +96,14 @@ function SignIn() {
             />
           </div>
           <Link to="/chats">
-            <button className="signInButton" onClick={postData} type="submit">
-              Sign In
+            <button className="CreateAccountButton" onClick={postData} type="submit">
+                Create Account
             </button>
           </Link>
-        <Link to="/create-account">
-          <button className="r_createAccount_Button" type="submit">
-            Don't Have An Account
-          </button>
-        </Link>
         </form>
       </div>
     </>
   );
 }
 
-export default SignIn;
+export default CreateAccount;
