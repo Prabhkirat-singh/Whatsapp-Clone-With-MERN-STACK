@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { useNavigate } from 'react-router-dom'
 import "../CSS Files/SideBar.css";
 import { Avatar } from "@material-ui/core";
 import DonutLargeIcon from "@material-ui/icons/DonutLarge";
@@ -8,17 +9,51 @@ import SearchIcon from "@material-ui/icons/Search";
 import Chat from "./Chat";
 import ChatBox from "./ChatBox";
 
+
 function SideBar() {
   const [inputSearchBar, setInputSearchBar] = useState({ name: "" });
+  const [userFname, setFnameData] = useState("")
+  const [userLname, setLnameData] = useState("")
+  const history = useNavigate()
+
+  const callChatPage = async () =>{
+    try{
+      const res = await fetch('/chats', {
+        method: "GET",
+        heaers: {
+          Accept: 'application/json',
+          "Content-Type": "application/json"
+        },
+        credentials: 'include',
+      })
+
+      const data = await res.json()
+      const {fname, lname} = data
+      setFnameData(fname)
+      setLnameData(lname)
+
+      if(!res.status === 200) {
+        console.log('Pls login first')
+        history('/')
+      }
+
+    } catch (err){
+      history('/')
+    }
+  }
+
+  useEffect(() => {
+      callChatPage()
+  })
 
   const handleInput = (e) => {
     const value = e.target.value;
     setInputSearchBar({ name: value });
   };
-
+  
   const postData = async ()=>{
     const {name} = inputSearchBar
-    const response = await fetch('/chats', {
+    const response = await fetch('/chats/find-user', {
       method:'POST',
       headers: {"Content-Type":"application/json"},
       body: JSON.stringify({userName:name})
@@ -36,7 +71,7 @@ function SideBar() {
     <>
       <div className="sidebar__container">
         <div className="sidebar__header">
-          <Avatar />
+          <Avatar src={`https://ui-avatars.com/api/?background=random&name=${userFname} ${userLname}`}/>
           <div className="sidebar__headerRight">
             <DonutLargeIcon />
             <MessageIcon />

@@ -12,7 +12,7 @@ function SignIn() {
     value = e.target.value;
     name = e.target.name;
     setUserInput({ ...userInput, [name]: value });
-  };
+  }
 
   const postData = async () => {
     const { userName, password } = userInput;
@@ -20,14 +20,16 @@ function SignIn() {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ userName, password }),
-    });
+    }); 
 
     const data = await response.json();
     if (response.status === 200) {
-      console.log(data);
+      setUserInput({userName: "", password: ""})      
+      history("/chats");
     } else if (response.status === 422 || !data) {
-      console.log(data);
-      history("/");
+      alert(data.message)
+    } else if (response.status === 400 || !data) {
+      alert(data.message)
     }
   };
 
@@ -64,7 +66,7 @@ function SignIn() {
               placeholder="Enter Your Password"
             />
           </div>
-          <Link to="/chats">
+          <Link to="/">
             <button className="signInButton" onClick={postData} type="submit">
               Sign In
             </button>

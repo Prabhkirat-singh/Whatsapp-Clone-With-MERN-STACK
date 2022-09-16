@@ -23,12 +23,11 @@ function CreateAccount() {
     });
 
     const data = await response.json();
-    if (response.status === 200) {
-      console.log(data);
-      return true
+    if (response.status === 201) {
+      alert(data.message)
+      history('/chats')
     } else if (response.status === 422 || !data) {
-      console.log(data);
-      history("/create-account");
+      alert(data.message)
     }
   };
 
@@ -95,7 +94,7 @@ function CreateAccount() {
               placeholder="Enter Your Password"
             />
           </div>
-          <Link to="/chats">
+          <Link to="/create-account">
             <button className="CreateAccountButton" onClick={postData} type="submit">
                 Create Account
             </button>

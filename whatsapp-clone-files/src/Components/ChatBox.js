@@ -17,7 +17,6 @@ function ChatBox() {
     msg.innerText = enteredMsg
     msgContainer.appendChild(msg)
     message__Area.appendChild(msgContainer)
-    console.log(enteredMsg)
   }
 
   return (

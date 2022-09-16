@@ -1,3 +1,4 @@
+import React from 'react';
 import '../CSS Files/App.css';
 import SideBar from "./SideBar";
 import SignIn from "./SignIn";

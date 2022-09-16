@@ -1,72 +1,101 @@
 const express = require("express");
+const jwt = require('jsonwebtoken');
+const Authenticate = require("../Middlewares/authenticate");
 const router = express.Router();
 
-require('../db/conn')
-const User = require('../Models/userSchema')
+require("../db/conn");
+const User = require("../Models/userSchema");
 
-const checkLogin = (req, res, next)=>{
-    console.log("working")
-    next()
-}
+const checkLogin = (req, res, next) => {
+  console.log("working");
+  next();
+};
 
-router.get('/', (req, res)=>{
-    res.send("Hello from router js")
-})
+router.get("/", (req, res) => {
+  res.send("Hello from router js");
+});
 
-router.post('/create-account', async (req, res)=>{
-    const {userName, fname, lname, password} = req.body
+router.post("/create-account", async (req, res) => {
+  const { userName, fname, lname, password } = req.body;
 
-    if(!userName || !fname || !lname || !password){
-        return res.status(422).json({error: "Pls Filled The Fields"})
+  if (!userName || !fname || !lname || !password) {
+    return res.status(422).json({ message: "Pls Filled The Fields" });
+  }
+  try {
+    const UserExist = await User.findOne({ userName });
+
+    if (UserExist) {
+      return res.status(422).json({ message: "User Already Exist" });
     }
-    try {
-        
-        const UserExist = await User.findOne({ userName })
 
-        if(UserExist){
-            return res.status(422).json({error: "User Name Already Exist"})
-        }
-        
-        const user = new User({userName, fname, lname, password});
+    const user = new User({ userName, fname, lname, password });
 
-        await user.save();
+    await user.save();
 
-        res.status(201).json({message: "User Registered Successfuly"})   
+    res.status(201).json({ message: "User Registered Successfuly" });
+    token = await userName.generateAuthToken()
+      console.log(token)
+      res.cookie('jwtToken', token, {
+        httpOnly: true
+      })
+  } catch (err) {
+    console.log(err);
+  }
+});
 
-    } catch (err) {
-        console.log(err)
-    }
-})
-
-router.post('/', async (req, res)=>{
-    try {
-        const {userName, password} = req.body
-        const UserExist = await User.findOne({userName})
-        const PasswordExist = await User.findOne({password})
-
-    if(PasswordExist && UserExist){
-        return res.status(200).json({message: "Loged In Successfully"})
-    }
-    else {return res.status(422).json({message : "Invailid User Name And Password"})}
-
-    } catch (error) {
-        console.log(error)
-    }si
+router.post("/", async (req, res) => {
+  try {
+    let token;
+    const { userName, password } = req.body;
+    const UserExist = await User.findOne({ userName });
     
-})
-
-router.post('/chats', async (req, res)=>{
-    try {
-        const {userName} = req.body
-        const UserExist = await User.findOne({userName})
-
-    if(UserExist){
-        return res.status(200).json({message: "User Found"})
-    } else {return res.status(404).json({message: "User Not Found"})}
-    
-    } catch (err) {
-        console.log(err)
+    if (!userName || !password) {
+      return res.status(400).json({message: "Please Enter The Data"})
     }
+
+    if (UserExist) {
+      token = await UserExist.generateAuthToken()
+      console.log(token)
+      res.cookie('jwtToken', token, {
+        httpOnly: true
+      })
+
+      const PasswordExist = UserExist.password;
+
+      if (PasswordExist === password) {
+        return res.status(200).json({ message: "Loged In Successfully" });
+      }
+      return res
+        .status(422)
+        .json({ message: "Invailid User Name And Password" });
+    } else {
+      return res
+        .status(422)
+        .json({ message: "Invailid User Name And Password" });
+    }
+  } catch (error) {
+    console.log(error);
+  }
+});
+
+router.post("/chats/find-user", async (req, res) => {
+  try {
+    const { userName } = req.body;
+    const UserExist = await User.findOne({ userName });
+
+    if (UserExist) {
+      return res.status(200).json({ message: "User Found" });
+    } else {
+      return res.status(404).json({ message: "User Not Found" });
+    }
+  } catch (err) {
+    console.log(err);
+  }
+});
+
+router.get('/chats', Authenticate, (req, res) => {
+  console.log(`this is the rootUser ${req.rootUser}`)
+  res.send(req.rootUser)
 })
 
 module.exports = router;
