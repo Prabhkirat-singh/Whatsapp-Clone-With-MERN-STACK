@@ -6,15 +6,6 @@ const router = express.Router();
 require("../db/conn");
 const User = require("../Models/userSchema");
 
-const checkLogin = (req, res, next) => {
-  console.log("working");
-  next();
-};
-
-router.get("/", (req, res) => {
-  res.send("Hello from router js");
-});
-
 router.post("/create-account", async (req, res) => {
   const { userName, fname, lname, password } = req.body;
 
@@ -34,7 +25,6 @@ router.post("/create-account", async (req, res) => {
 
     res.status(201).json({ message: "User Registered Successfuly" });
     token = await userName.generateAuthToken()
-      console.log(token)
       res.cookie('jwtToken', token, {
         httpOnly: true
       })
@@ -55,7 +45,6 @@ router.post("/", async (req, res) => {
 
     if (UserExist) {
       token = await UserExist.generateAuthToken()
-      console.log(token)
       res.cookie('jwtToken', token, {
         httpOnly: true
       })
@@ -94,8 +83,15 @@ router.post("/chats/find-user", async (req, res) => {
 });
 
 router.get('/chats', Authenticate, (req, res) => {
-  console.log(`this is the rootUser ${req.rootUser}`)
   res.send(req.rootUser)
+})
+
+router.get('/chats-fetching-All-Users', (req, res)=>{
+  User.find({}).then((users)=>{
+    res.status(200).json({users})
+  }).catch((err)=>{
+    console.log(err)
+  })
 })
 
 module.exports = router;
